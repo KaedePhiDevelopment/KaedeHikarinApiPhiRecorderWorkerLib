@@ -1,27 +1,15 @@
 # Phi Recorder Native
 
-Phigros 谱面渲染纯 native 库 (RPE / PGR charts to video).
+本仓库是基于 [Phi Recorder](https://github.com/AntiLeave/PhiRecorder) 的原生渲染库，提供 **无窗口的 EGL desktop OpenGL pbuffer 渲染**，可在 Linux/Windows 上运行。  
 
-Fast Simple Lightweight Convenient
+# 许可
+本仓库及其衍生作品遵循 **GPL-3.0-or-later** 许可协议，详见 [LICENSE](LICENSE) 文件。  
+我们尊重、遵循并支持开源社区的精神，欢迎任何人基于本仓库进行修改、分发和使用，但请遵守 GPL-3.0-or-later 的相关条款。  
 
-## 架构
+# 免责声明
+本仓库部分资源（如 `assets` 目录下的字体、音频等）来源于第三方，版权归**南京鸽游网络有限公司**所有，本人与鸽游及《Phigros》官方不存在授权、合作或运营关系。  
+相关文件无授权，如有侵权，请联系[我](mailto:nrlt@nuanr-mxi.com)或在 issue 中提出，我将尽快处理。
 
-- `phi-recorder-native` — 唯一公开入口是 C ABI (`include/phi_recorder.h`)，供 Worker 通过 P/Invoke 调用
-- `renderer-core` — 纯逻辑：配置、时间轴、FFmpeg 参数计划、ChartInfo、事件与任务控制
-- `renderer-protocol` — DLL 与私有渲染进程之间的 PHIR 二进制协议
-- `renderer-host` — 私有 headless 渲染进程（macroquad + phire + sasa + ffmpeg），由 DLL 管理，用于进程隔离与强制取消
-- `assets/` — 渲染运行时资源（字体、UI 贴图、`respack/`、`rank/`），由调用方通过 `phi_context_options_t` 显式传入
+# ~~不可视之物~~
+啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊
 
-## 构建
-
-```bash
-cargo check --workspace --all-targets
-cargo test --workspace
-cargo build -p phi-renderer-host
-```
-
-## 注意事项 / Notice
-
-- 请不要伪造游玩成绩、官方内容等，以免造成不好的影响
-- 游玩界面与本家有明显区分, 如 COMBO 处文本与 `COMBO` 有明显区分
-- 不建议向不使用 `Re: PhiEdit` 的玩家分享本软件

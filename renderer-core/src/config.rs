@@ -211,6 +211,7 @@ impl Default for RenderConfig {
 impl RenderConfig {
     pub fn to_phire_config(&self) -> phire::config::Config {
         phire::config::Config {
+            adjust_time: false,
             aggressive_chart: self.aggressive_chart,
             aggressive_note: self.aggressive_note,
             aggressive_particle: self.aggressive_particle,

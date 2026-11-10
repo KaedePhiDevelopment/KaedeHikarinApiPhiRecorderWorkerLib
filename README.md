@@ -1,6 +1,6 @@
 # Phi Recorder Native
 
-本仓库是基于 [Phi Recorder](https://github.com/AntiLeave/PhiRecorder) 的原生渲染库，提供 **无窗口的 EGL desktop OpenGL pbuffer 渲染**，可在 Linux/Windows 上运行。  
+本仓库是基于 [Phi Recorder](https://github.com/AntiLeave/Phi-Recorder) 的原生渲染库，提供 **无窗口的 EGL desktop OpenGL pbuffer 渲染**，可在 Linux/Windows 上运行。  
 
 # 许可
 本仓库及其衍生作品遵循 **GPL-3.0-or-later** 许可协议，详见 [LICENSE](LICENSE) 文件。  

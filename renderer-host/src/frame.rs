@@ -177,6 +177,7 @@ impl PreparedFrameRenderer {
                     illustration.into(),
                     None,
                     None,
+                    None,
                 )
                 .await?,
             ),

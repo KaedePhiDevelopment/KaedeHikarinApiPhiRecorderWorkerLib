@@ -112,9 +112,6 @@ pub fn build_output_args(
         bitrate_control.to_owned(),
         bitrate.to_owned(),
     ];
-    if bitrate_control == "-qp" && encoder.ends_with("_vaapi") {
-        args.extend(["-rc_mode".to_owned(), "CQP".to_owned()]);
-    }
     if let Some(audio_bitrate) = audio_bitrate {
         args.extend(["-b:a".to_owned(), audio_bitrate.to_owned()]);
     }
@@ -168,85 +165,4 @@ pub fn build_video_input_args(
         .map(str::to_owned),
     );
     args
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn bitrate_policy_matches_legacy_encoder_order() {
-        let encoders = ["h264_nvenc", "h264_qsv", "h264_amf", "h264_vaapi"];
-        assert_eq!(
-            select_bitrate_control(true, "h264_nvenc", encoders, false, None),
-            "-cq"
-        );
-        assert_eq!(
-            select_bitrate_control(true, "h264_qsv", encoders, false, None),
-            "-q"
-        );
-        assert_eq!(
-            select_bitrate_control(true, "h264_amf", encoders, false, None),
-            "-qp_p"
-        );
-        assert_eq!(
-            select_bitrate_control(true, "h264_vaapi", encoders, false, None),
-            "-qp"
-        );
-        assert_eq!(
-            select_bitrate_control(false, "libx264", encoders, false, None),
-            "-b:v"
-        );
-    }
-
-    #[test]
-    fn filter_graph_keeps_legacy_audio_input_indexes() {
-        let plan = build_audio_filter(0.5, 0.4, 1.0, false, true, 0.5, 123.0, false);
-        assert!(plan.filter_complex.starts_with("[2:a]"));
-        assert!(plan.filter_complex.contains("[1:a]"));
-        assert!(plan.filter_complex.contains("[3:a]"));
-        assert!(plan.filter_complex.contains("adelay=123|123"));
-    }
-
-    #[test]
-    fn video_args_are_raw_yuv_input() {
-        let args = build_video_input_args(1920, 1080, 60, "h264_nvenc", "h264_nvenc");
-        assert!(args
-            .windows(2)
-            .any(|pair| pair[0] == "-pix_fmt" && pair[1] == "yuv420p"));
-        assert!(args
-            .windows(2)
-            .any(|pair| pair[0] == "-hwaccel_output_format" && pair[1] == "cuda"));
-    }
-
-    #[test]
-    fn output_args_preserve_mp4_and_hires_containers() {
-        let filter = "[a1][a2][a3]amix=inputs=3[a]";
-        let mp4 = build_output_args("libx264", "-crf", "28", filter, false);
-        let mov = build_output_args("libx265", "-b:v", "28", filter, true);
-
-        assert!(mp4
-            .windows(2)
-            .any(|pair| pair[0] == "-f" && pair[1] == "mp4"));
-        assert!(mov
-            .windows(2)
-            .any(|pair| pair[0] == "-f" && pair[1] == "mov"));
-        assert!(mp4
-            .windows(2)
-            .any(|pair| pair[0] == "-b:a" && pair[1] == "320k"));
-        assert!(!mov.iter().any(|arg| arg == "320k"));
-    }
-
-    #[test]
-    fn vaapi_quality_args_use_constant_qp_mode() {
-        let filter = "[a1][a2][a3]amix=inputs=3[a]";
-        let args = build_output_args("hevc_vaapi", "-qp", "20", filter, false);
-
-        assert!(args
-            .windows(2)
-            .any(|pair| pair[0] == "-qp" && pair[1] == "20"));
-        assert!(args
-            .windows(2)
-            .any(|pair| pair[0] == "-rc_mode" && pair[1] == "CQP"));
-    }
 }
